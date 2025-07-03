@@ -6,7 +6,7 @@ class ChatGroup(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
-        return self.group_name
+        return self.name
 
 
 class GroupMessage(models.Model):

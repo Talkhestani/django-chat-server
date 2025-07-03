@@ -17,7 +17,7 @@ def chat_view(request):
             message.author = request.user
             message.group = ChatGroup.objects.get(name='public-chat')
             message.save()
-            return render(request, 'a_rchat/partials/chat_messages.html', {'message': message})
+            return render(request, 'a_rchat/chat_messages.html', {'message': message})
     
     context = {
         'messages': messages,

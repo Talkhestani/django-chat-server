@@ -9,6 +9,7 @@ pillow = "*"
 django-cleanup = "*"
 django-allauth = "*"
 django-htmx = "*"
+channels = {extras = ["daphne"], version = "*"}
 
 [dev-packages]
 
