@@ -92,10 +92,10 @@ TEMPLATES = [
 
 # WSGI_APPLICATION = 'a_core.wsgi.application'
 ASGI_APPLICATION = 'a_core.asgi.application'
-CHANNEL_LAYER = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChennelLayer'
-    }
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    },
 }
 
 # Database
