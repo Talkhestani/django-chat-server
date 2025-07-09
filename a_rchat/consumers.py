@@ -21,19 +21,19 @@ class ChatRoomConsumer(WebsocketConsumer):
             self.update_online_count()
         
         self.accept()
-    
+
 
     def disconnect(self, code):
-        # async_to_sync(self.channel_layer.group_dicard)(
-        #     self.chatroom_name, self.channel_name
-        # )
-        
+        async_to_sync(self.channel_layer.group_discard)(
+            self.chatroom_name, self.channel_name
+        )
+
         if self.user in self.chatroom.users_online.all():
             self.chatroom.users_online.remove(self.user)
             self.update_online_count()
         
-    
-    
+
+
     def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
         body = text_data_json.get('body', '')
@@ -79,5 +79,9 @@ class ChatRoomConsumer(WebsocketConsumer):
     
     def online_count_handler(self, event):
         online_count = event['online_count']
-        html = render_to_string('a_rchat/partials/online_count.html', {'online_count': online_count})
+        html = render_to_string(
+            'a_rchat/partials/online_count.html',
+            {'online_count': online_count}
+        )
+
         self.send(html)

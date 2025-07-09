@@ -10,6 +10,8 @@ django-cleanup = "*"
 django-allauth = "*"
 django-htmx = "*"
 channels = {extras = ["daphne"], version = "*"}
+channels-redis = "*"
+shortuuid = "*"
 
 [dev-packages]
 
