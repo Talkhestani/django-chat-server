@@ -6,6 +6,8 @@ import shortuuid
 class ChatGroup(models.Model):
     name = models.CharField(max_length=255, unique=True, default=shortuuid.uuid)
     users_online = models.ManyToManyField(User, related_name='online_in_groups', blank=True)
+    chat_name = models.CharField(max_length=128, null=True, blank=True)
+    admin = models.ForeignKey(User, related_name='admin_groups', blank=True, null=True, on_delete=models.SET_NULL)
     members = models.ManyToManyField(User, related_name='chat_groups', blank=True)
     is_private = models.BooleanField(default=False)
 

@@ -2,7 +2,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from a_rchat.forms import GroupMessageForm
+from a_rchat.forms import GroupMessageForm, NewGroupFrom
 from a_rchat.models import GroupMessage, ChatGroup
 
 
@@ -20,8 +20,14 @@ def chat_view(request, chatroom_name='public-chat'):
         for member in chat_group.members.all():
             if member != request.user:
                 other_user = member
-                break    
-    
+                break
+
+
+    if chat_group.chat_name:
+        if request.user not in chat_group.members.all():
+            chat_group.members.add(request.user)
+
+
     if request.htmx:
         form = GroupMessageForm(request.POST)
         if form.is_valid():
@@ -35,7 +41,8 @@ def chat_view(request, chatroom_name='public-chat'):
         'messages': chat_messages,
         'form': form,
         'other_user': other_user,
-        'chatroom_name': chatroom_name
+        'chatroom_name': chatroom_name,
+        'chat_group': chat_group
     }
     return render(request, template_name='a_rchat/chat.html', context=context)
 
@@ -59,3 +66,25 @@ def get_or_create_chatroom(request, username):
         chatroom.members.add(request.user, other_user)
 
     return redirect('a_rchat:chatroom', chatroom.name)
+
+
+@login_required
+def create_group(request):
+    form = NewGroupFrom()
+    
+    if request.method == 'POST':
+        form = NewGroupFrom(request.POST)
+        if form.is_valid():
+            new_group = form.save(commit=False)
+            new_group.admin = request.user
+            new_group.save()
+            new_group.members.add(request.user)
+            return redirect('a_rchat:chatroom', new_group.name)
+    
+    return render(
+        request,
+        template_name='a_rchat/create_group.html',
+        context={
+            'form': form
+        }
+    )
